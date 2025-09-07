@@ -1,0 +1,101 @@
+BEGIN PROGRAM
+
+    PRINT "Welcome to Greg's Maths Test!"
+    PRINT "Select a difficulty:"
+    PRINT "1) Easy"
+    PRINT "2) Medium"
+    PRINT "3) Hard"
+
+    REPEAT
+        READ choice
+        IF choice NOT IN ["1", "2", "3"] THEN
+            PRINT "Invalid choice! Enter 1, 2 or 3."
+        ELSE
+            EXIT LOOP
+    UNTIL valid choice selected
+
+    IF choice == "1" THEN
+        PRINT "Easy mode selected!"
+        min_val ← 1
+        max_val ← 10
+    ELSE IF choice == "2" THEN
+        PRINT "Medium mode selected!"
+        min_val ← 1
+        max_val ← 20
+    ELSE
+        PRINT "Hard mode selected!"
+        min_val ← 1
+        max_val ← 50
+    END IF
+
+    score ← 0
+    total_questions ← 5
+    results ← empty list
+
+    FOR question_number FROM 1 TO total_questions DO
+
+        num1 ← RANDOM(min_val, max_val)
+        num2 ← RANDOM(min_val, max_val)
+        operator ← RANDOM CHOICE ["+", "-"]
+
+        IF operator = "-" AND num2 > num1 THEN
+            SWAP num1, num2
+        END IF
+
+        IF question_number = total_questions THEN
+            PRINT "Challenge question!"
+        END IF
+
+        PRINT "Score: " + score
+        PRINT "Question " + question_number + " of " + total_questions
+        PRINT "What is num1 operator num2?"
+
+        start_time ← CURRENT TIME
+        READ user_answer
+        end_time ← CURRENT TIME
+
+        response_time ← end_time - start_time
+
+        IF operator = "+" THEN
+            correct_answer ← num1 + num2
+        ELSE
+            correct_answer ← num1 - num2
+        END IF
+
+        IF user_answer = correct_answer THEN
+            IF response_time <= 2 THEN
+                points ← 8
+            ELSE IF response_time <= 4 THEN
+                points ← 6
+            ELSE
+                points ← 4
+            END IF
+
+            PRINT "Correct! response_time second(s) - points awarded."
+            score ← score + points
+            APPEND (question_number, "Yes", response_time) TO results
+        ELSE
+            PRINT "Incorrect! response_time second(s) - no points awarded."
+            APPEND (question_number, "No", response_time) TO results
+        END IF
+
+    END FOR
+
+    correct_count ← COUNT of "Yes" in results
+    percent_correct ← ROUND((correct_count / total_questions) * 100)
+    avg_time ← ROUND(SUM of all response_times / total_questions)
+
+    PRINT "Results:"
+    PRINT "Final score: " + score
+    PRINT "Correct answers: " + percent_correct + "%"
+    PRINT "Average response time: " + avg_time + "s"
+
+    PRINT "Breakdown:"
+    PRINT "Question   Correct   Time"
+    FOR EACH record IN results DO
+        PRINT question_number, correctness, response_time
+    END FOR
+
+    PRINT "Note: Results are rounded to the nearest integer."
+
+END PROGRAM

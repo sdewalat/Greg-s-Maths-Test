@@ -34,16 +34,20 @@ def main():
 
     # --- Ask questions loop ---
     for question_number in range(1, total_questions + 1):
-        # Randomly generate two numbers for subtraction
         num1 = random.randint(min_val, max_val)
         num2 = random.randint(min_val, max_val)
+        operator = random.choice(["+", "-"])  # Choose addition or subtraction
+
+        # Ensure positive result for subtraction
+        if operator == "-" and num2 > num1:
+            num1, num2 = num2, num1
 
         if question_number == total_questions:
             print("Challenge question!")   # Last one is challenge
 
         print(f"Score: {score}")
         print(f"Question {question_number} of {total_questions}:")
-        print(f"What is {num1} - {num2}? ", end="")
+        print(f"What is {num1} {operator} {num2}? ", end="")
 
         # Measure start time
         start_time = time.time()
@@ -55,7 +59,12 @@ def main():
 
         # Calculate response time
         response_time = int(end_time - start_time)
-        correct_answer = num1 - num2
+
+        # Compute correct answer safely
+        if operator == "+":
+            correct_answer = num1 + num2
+        else:
+            correct_answer = num1 - num2
 
         # --- Check correctness ---
         if answer == correct_answer:
